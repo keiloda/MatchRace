@@ -46,25 +46,35 @@ public class GetBuoysTask extends AsyncTask<String, Integer, Map<String, LatLng>
 
 	protected Map<String, LatLng> doInBackground(String... urls) {
 		Map<String, LatLng> buoysLatLng = new HashMap<String, LatLng>();
+
 		try {
-			JSONObject json = JsonReader.readJsonFromUrl(urls[0]);
-			JSONArray jsonArray = json.getJSONArray("positions");
+            Log.i("test","getting bouys tasks..");
+
+			//JSONObject json = JsonReader.readJsonFromUrl(urls[0]);
+            JSONObject json = JsonReader.readJsonFromUrl(C.URL_GET_BUOYS+event);
+            Log.i("test","finished read");
+            Log.i("test",json.toString());
+            JSONArray jsonArray = json.getJSONArray("positions");
+            Log.i("test",jsonArray.toString());
 			int countBouy = 0;
 			for (int i = 0; i < jsonArray.length() && countBouy < C.MAX_BUOYS; i++) {
+                Log.i("test","getting bouy"+i);
 				JSONObject jsonObj = (JSONObject) jsonArray.get(i);
-				if (jsonObj.getString("info").startsWith(C.BUOY_PREFIX)) {
-					if (jsonObj.getString("event").equals(event)) {
+				//if (jsonObj.getString("info").startsWith(C.BUOY_PREFIX)) {
+					if (jsonObj.getString("Event").equals(event)) {
 						countBouy++;
-						String buoyName = jsonObj.getString("info").split("_")[0];
-						String lat = jsonObj.getString("lat");
-						String lng = jsonObj.getString("lon");
-
+						//String buoyName = jsonObj.getString("info").split("_")[0];
+						String buoyNum= jsonObj.getString("BuoysNumber");
+                        String lat = jsonObj.getString("Latitude");
+						String lng = jsonObj.getString("Longitude");
+                        Log.i("test","lat="+lat+" lng="+lng);
 						// Adds buoy with LatLng to HashMap.
-						buoysLatLng.put(buoyName, new LatLng(Double.parseDouble(lat), Double.parseDouble(lng)));
+						buoysLatLng.put(buoyNum, new LatLng(Double.parseDouble(lat), Double.parseDouble(lng)));
 
-						Log.i(name + " " + buoyName + " " + event, "Lat: " + lat + ", Lng: " + lng);
+						//Log.i(name + " " + buoyNum + " " + event, "Lat: " + lat + ", Lng: " + lng);
+                        Log.i("test",name+" "+buoyNum+" "+event+"Lat"+lat+", Lng: "+lng);
 					}
-				}
+				//}
 			}
 			return buoysLatLng;
 		}

@@ -36,6 +36,9 @@ public class C {
     public static final String URL_HISTORY_TABLE = "http://www.dodbeni.byethost7.com/public/update.php?table=history";
     public static final String URL_BUOYS_TABLE="http://www.dodbeni.byethost7.com/public/update.php?table=buoys";
     public static final String URL_USERS_TABLE="http://www.dodbeni.byethost7.com/public/update.php?table=users";
+    public static final String URL_GET_RIVAL="http://www.dodbeni.byethost7.com/public/getRival.php?&Event=";
+    public static final String URL_GET_BUOYS="http://www.dodbeni.byethost7.com/public/getBuoys.php?&Event=";
+    public static final String URL_GET_USERS_ARRAY="http://www.dodbeni.byethost7.com/public/getUsersDb.php?&Event=";
 
 
 	// Data constants.

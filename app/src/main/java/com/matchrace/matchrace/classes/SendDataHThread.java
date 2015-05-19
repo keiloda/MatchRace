@@ -91,7 +91,7 @@ public class SendDataHThread extends HandlerThread {
                 String temp=fullUserName.replaceAll("Sailor","");
 
                 String time=new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
-                url = new URL(C.URL_HISTORY_TABLE + "&Latitude=" + lat +"&Longitude=" + lng +"&Pressure="+ speed + "&Azimuth="+ bearing + "&Bearing=" + bearing + "&Information=" + temp + "&Event=" + event+"&curTime="+time);
+                url = new URL(C.URL_HISTORY_TABLE + "&Latitude=" + lat +"&Longitude=" + lng +"&Pressure=" + speed + "&Azimuth="+ bearing + "&Bearing=" + bearing + "&Information=" + temp + "&Event=" + event+"&curTime="+time);
                 Log.i("test","sending to history"+url.toString());
                 urlConnection = (HttpURLConnection) url.openConnection();
                 try {

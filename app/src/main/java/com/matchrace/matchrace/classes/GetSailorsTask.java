@@ -46,27 +46,31 @@ public class GetSailorsTask extends AsyncTask<String, Integer, Map<String, LatLn
 	protected Map<String, LatLng> doInBackground(String... urls) {
 		Map<String, LatLng> sailorsLatLng = new HashMap<String, LatLng>();
 		try {
-			JSONObject json = JsonReader.readJsonFromUrl(urls[0]);
-			JSONArray jsonArray = json.getJSONArray("positions");
+			//JSONObject json = JsonReader.readJsonFromUrl(urls[0]);
+            JSONObject json = JsonReader.readJsonFromUrl(C.URL_GET_RIVAL+event+"&Information="+fullUserName);
+            JSONArray jsonArray = json.getJSONArray("positions");
+            Log.i("test",jsonArray.toString());
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject jsonObj = (JSONObject) jsonArray.get(i);
-				if (jsonObj.getString("info").startsWith(C.SAILOR_PREFIX)) {
-					if (jsonObj.getString("event").equals(event)) {
-						String sailorFullName = jsonObj.getString("info");
-						if (sailorFullName.equals((fullUserName))) {
-							continue;
-						}
-						String lat = jsonObj.getString("lat");
-						String lng = jsonObj.getString("lon");
+				//if (jsonObj.getString("info").startsWith(C.SAILOR_PREFIX)) {
+				//	if (jsonObj.getString("Event").equals(event)) {
+						String sailorFullName = jsonObj.getString("Information");
+                        Log.i("test","sailorFullName="+sailorFullName);
+					//	if (sailorFullName.equals((fullUserName))) {
+					//		continue;
+					//	}
+						String lat = jsonObj.getString("Latitude");
+						String lng = jsonObj.getString("Longitude");
 						if (Double.parseDouble(lat) == 0 || Double.parseDouble(lng) == 0) {
 							continue;
 						}
-						String sailorName = sailorFullName.split("_")[0].substring(6);
-						sailorsLatLng.put(sailorName, new LatLng(Double.parseDouble(lat), Double.parseDouble(lng)));
+						//String sailorName = sailorFullName.split("_")[0].substring(6);
+                         String sailorName = sailorFullName.split("_")[0];
+                        sailorsLatLng.put(sailorName, new LatLng(Double.parseDouble(lat), Double.parseDouble(lng)));
 
 						Log.i(name + " " + sailorName + " " + event, "Lat: " + lat + ", Lng: " + lng);
-					}
-				}
+				//	}
+				//}
 			}
 			return sailorsLatLng;
 		}
