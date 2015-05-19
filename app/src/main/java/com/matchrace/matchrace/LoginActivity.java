@@ -47,6 +47,7 @@ public class LoginActivity extends Activity {
     private boolean adminRequest = false;
     private boolean registerRequest = false;
     private boolean existUserRequest=false;
+    private boolean  SignInRequest=false;
 
     // SharedPreferences used for loading the latest user.
     private SharedPreferences sp;
@@ -129,6 +130,7 @@ public class LoginActivity extends Activity {
 
             @Override
             public void onClick(View view) {
+                SignInRequest=true;
                 attemptLogin();
             }
         });
@@ -282,8 +284,35 @@ public class LoginActivity extends Activity {
             }
 
             if (registerRequest) {
+               // registerRequest=false;
+                String name2 = "UserLoginTask";
+                try {
+                    // Gets the user data from DB and checks if the user's data match.
+                    JSONObject json = JsonReader.readJsonFromUrl(C.URL_GET_USERS_ARRAY + mEvent);
+                    JSONArray jsonArray = json.getJSONArray("positions");
+                    for (int i=0;i<jsonArray.length();i++){
+                        JSONObject jsonObj = (JSONObject) jsonArray.get(i);
+                        String JsonUser = jsonObj.getString("mUser");
+                        JsonUser = "Sailor" + JsonUser;
+                        if (JsonUser.equals(mUser)) {
+                            //existUserRequest = true;
+                            return false;
+                        }
+                    }
+                }
+                catch (JSONException e) {
+                    Log.i(name2, "JSONException");
+                    return false;
+                }
+                catch (IOException e) {
+                    Log.i(name2, "IOException, Ensure Mobile Data is NOT off");
+                    return false;
+                }
                 return true;
             }
+
+            if(SignInRequest){
+            //    SignInRequest=false;
 
             String name = "UserLoginTask";
             try {
@@ -308,7 +337,7 @@ public class LoginActivity extends Activity {
                 Log.i(name, "IOException, Ensure Mobile Data is NOT off");
                 return false;
             }
-
+            };
             return false;
         }
 
@@ -325,7 +354,7 @@ public class LoginActivity extends Activity {
                 }
                 else if (registerRequest) {
                     registerRequest = false;
-
+                    Log.i("test","registerRequest");
                     // HandlerThread for creating a new user in the DB through thread.
                     SendDataHThread thread = new SendDataHThread("CreateNewUser");
                     thread.setPriority(Process.THREAD_PRIORITY_BACKGROUND);
@@ -344,6 +373,7 @@ public class LoginActivity extends Activity {
                 else if(existUserRequest){
                     String fullUserName = mUser + "_" + mPassword + "_" + mEvent;
                     intent = new Intent(LoginActivity.this, MenuActivity.class);
+                    existUserRequest=false;
                 }
                 else {
                     intent = new Intent(LoginActivity.this, MenuActivity.class);
