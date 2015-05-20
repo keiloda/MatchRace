@@ -48,6 +48,7 @@ public class LoginActivity extends Activity {
     private boolean registerRequest = false;
     private boolean existUserRequest=false;
     private boolean  SignInRequest=false;
+    private boolean tring_to_register_again=false;
 
     // SharedPreferences used for loading the latest user.
     private SharedPreferences sp;
@@ -284,6 +285,7 @@ public class LoginActivity extends Activity {
             }
 
             if (registerRequest) {
+                Log.i("test","getting into registerRequest");
                // registerRequest=false;
                 String name2 = "UserLoginTask";
                 try {
@@ -296,6 +298,7 @@ public class LoginActivity extends Activity {
                         JsonUser = "Sailor" + JsonUser;
                         if (JsonUser.equals(mUser)) {
                             //existUserRequest = true;
+                            tring_to_register_again=true;
                             return false;
                         }
                     }
@@ -313,7 +316,7 @@ public class LoginActivity extends Activity {
 
             if(SignInRequest){
             //    SignInRequest=false;
-
+            Log.i("test","getting into SignInRequest");
             String name = "UserLoginTask";
             try {
                 // Gets the user data from DB and checks if the user's data match.
@@ -372,8 +375,9 @@ public class LoginActivity extends Activity {
                 }
                 else if(existUserRequest){
                     String fullUserName = mUser + "_" + mPassword + "_" + mEvent;
-                    intent = new Intent(LoginActivity.this, MenuActivity.class);
                     existUserRequest=false;
+                    intent = new Intent(LoginActivity.this, MenuActivity.class);
+
                 }
                 else {
                     intent = new Intent(LoginActivity.this, MenuActivity.class);
@@ -395,8 +399,17 @@ public class LoginActivity extends Activity {
                 finish();
             }
             else {
-                etPass.setError(getString(R.string.error_incorrect_pass_event));
-                etEvent.setError(getString(R.string.error_incorrect_pass_event));
+                registerRequest = false;
+                if(tring_to_register_again){
+                    tring_to_register_again=false;
+                    etUser.setError("this user is already exist in this event");
+                    etEvent.setError("this user is already exist in this event");
+                }
+                else{
+                    etPass.setError(getString(R.string.error_incorrect_pass_event));
+                    etEvent.setError(getString(R.string.error_incorrect_pass_event));
+                }
+
                 etEvent.requestFocus();
             }
         }
